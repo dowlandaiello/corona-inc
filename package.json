@@ -1,51 +1,34 @@
 {
-  "name": "coronainc",
-  "version": "0.1.0",
+  "name": "corona-inc",
+  "version": "1.0.0",
+  "description": "Coronavirus, but it&#39;s plague inc.",
+  "author": "Dowland Aiello",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "test": "jest"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
-    "vue": "^2.6.11"
+    "nuxt": "^2.0.0",
+    "nuxt-buefy": "^0.3.2",
+    "@nuxtjs/axios": "^5.3.6"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.2.0",
-    "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-service": "~4.2.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.7.2",
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-nuxt": ">=0.4.2",
     "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier-vue": "^2.0.2",
-    "eslint-plugin-vue": "^6.1.2",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/recommended",
-      "plugin:prettier-vue/recommended",
-      "prettier/vue"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {
-      "prettier/prettier": [
-        "warn",
-        {
-          "singleQuote": true
-        }
-      ]
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
+    "vue-jest": "^4.0.0-0"
+  }
 }
