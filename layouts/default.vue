@@ -39,7 +39,7 @@
 
     <nav class="navbar is-fixed-bottom is-spaced columns">
       <div class="column is-one-quarter">
-        <div class="control has-icons-left">
+        <div class="control has-icons-left has-icons-right">
           <span class="icon is-left level-item">
             <b-icon icon="dna" size="is-small" />
             <p v-bind:style="{ marginLeft: '3rem' }">DNA</p>
@@ -50,6 +50,9 @@
             type="is-primary"
             class="is-stat is-large is-marginless is-hidden-mobile"
           />
+          <span class="icon is-right">
+            <p v-bind:style="{ color: 'black' }">7%</p>
+          </span>
         </div>
         <b-button
           v-bind:style="{ color: '#9e1a39', fontWeight: '600' }"
