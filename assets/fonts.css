@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "Ndemic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ndemic-regular.ttf");
+}
+
+@font-face {
+  font-family: "Ndemic";
+  font-style: oblique;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ndemic-bold.ttf");
+}
