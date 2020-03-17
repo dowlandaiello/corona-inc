@@ -20,13 +20,12 @@
 
     <section class="main-content columns">
       <aside class="column is-2 section">
-        <p class="menu-label is-hidden-touch">
-          General
-        </p>
+        <p class="menu-label is-hidden-touch">General</p>
         <ul class="menu-list">
           <li v-for="(item, key) of items" :key="key">
             <nuxt-link :to="item.to" exact-active-class="is-active">
-              <b-icon :icon="item.icon" /> {{ item.title }}
+              <b-icon :icon="item.icon" />
+              {{ item.title }}
             </nuxt-link>
           </li>
         </ul>
@@ -43,23 +42,24 @@
           title="Disease"
           statBarDescription="DNA"
           statBarIcon="dna"
-          statBarValue="100"
-          maxStatBarValue="100"
+          :statBarValue="100"
+          :maxStatBarValue="100"
           type="is-primary"
         />
       </div>
       <div class="column is-half" :style="{ marginTop: 'auto' }">
         <div class="columns is-gapless is-centered stat-section">
           <div class="column is-two-sixths">
-            <b-icon icon="biohazard" size="is-small" />
-            Infected
-            <p :style="{ color: '#b30033' }">{{ nInfected }}</p>
+            <b-icon icon="biohazard" size="is-small" />Infected
+            <p :style="{ color: '#b30033' }">
+              {{ nInfected.toLocaleString() }}
+            </p>
           </div>
           <div class="column is-two-sixths is-vcentered primary-stat-section">
             <b-button size="is-large" class="primary-stat-section" expanded>
               World
               <b-progress
-                :value="20"
+                :value="percentInfected"
                 size="is-small"
                 type="is-primary"
                 :style="{ height: '0.25rem' }"
@@ -68,9 +68,8 @@
             </b-button>
           </div>
           <div class="column is-two-sixths">
-            <b-icon icon="skull" size="is-small" />
-            Dead
-            <p :style="{ color: '#b30033' }">{{ nDead }}</p>
+            <b-icon icon="skull" size="is-small" />Dead
+            <p :style="{ color: '#b30033' }">{{ nDead.toLocaleString() }}</p>
           </div>
         </div>
       </div>
@@ -79,8 +78,8 @@
           title="World"
           statBarDescription="Cure"
           statBarIcon="flask"
-          statBarValue="100"
-          maxStatBarValue="100"
+          :statBarValue="100"
+          :maxStatBarValue="100"
           type="is-info"
         />
       </div>
@@ -99,6 +98,7 @@
   );
   color: #ffffff;
 }
+
 .stat-section {
   background: rgb(0, 0, 0);
   background: linear-gradient(
@@ -131,9 +131,42 @@ export default {
           to: { name: 'inspire' }
         }
       ],
+      loading: true,
       nInfected: 0,
-      nDead: 0
+      nDead: 0,
+      percentInfected: 0
     };
+  },
+
+  created() {
+    console.log('created');
+
+    // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
+    this.fetchGlobalStatistics();
+
+    // Refresh every 10 seconds
+    setInterval(() => this.fetchGlobalStatistics(), 10000);
+  },
+
+  methods: {
+    fetchGlobalStatistics() {
+      // Vamos a ganar la informacion del mundo
+      fetch('https://coronavirus-19-api.herokuapp.com/all')
+        .then(data => data.json())
+        .then(parsed => {
+          this.nInfected = parsed.cases - (parsed.recovered + parsed.deaths);
+          this.nDead = parsed.deaths;
+          this.percentInfected = 100 * (this.nInfected / 7771535787);
+
+          // Dijimos a la cliente que ganamos las statisticas
+          this.loading = false;
+        })
+        .catch(err => {
+          // Encontramos un excepcion
+          this.loading = false;
+          console.log(err);
+        });
+    }
   },
 
   components: {
