@@ -39,6 +39,12 @@
 
     <nav class="navbar is-fixed-bottom is-spaced columns">
       <div class="column is-one-quarter">
+        <b-progress
+          v-bind:style="{ borderRadius: '6px;' }"
+          :value="20"
+          size="is-large"
+          >DNA</b-progress
+        >
         <b-button
           v-bind:style="{ color: '#9e1a39;', fontWeight: '600;' }"
           size="is-large"
@@ -46,7 +52,7 @@
           >Disease</b-button
         >
       </div>
-      <div class="column is-half">
+      <div class="column is-half" v-bind:style="{ marginTop: 'auto;' }">
         <div class="columns is-gapless is-centered stat-section">
           <div class="column is-two-sixths">
             <b-icon icon="biohazard" size="is-small" />
@@ -56,7 +62,12 @@
           <div class="column is-two-sixths is-vcentered primary-stat-section">
             <b-button size="is-large" class="primary-stat-section" expanded>
               World
-              <b-progress :value="20" size="is-small" type="is-danger" />
+              <b-progress
+                :value="20"
+                size="is-small"
+                type="is-danger"
+                v-bind:style="{ height: '0.25rem;' }"
+              />
             </b-button>
           </div>
           <div class="column is-two-sixths">
