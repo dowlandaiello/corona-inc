@@ -42,7 +42,7 @@
           title="Disease"
           statBarDescription="DNA"
           statBarIcon="dna"
-          :statBarValue="100"
+          :statBarValue="percentDNA"
           :maxStatBarValue="100"
           type="is-primary"
         />
@@ -78,7 +78,9 @@
           title="World"
           statBarDescription="Cure"
           statBarIcon="flask"
-          :statBarValue="100"
+          :statBarValue="
+            Math.round((new Date('March 17, 2020 00:00:00') / new Date()) * 40)
+          "
           :maxStatBarValue="100"
           type="is-info"
         />
@@ -134,7 +136,9 @@ export default {
       loading: true,
       nInfected: 0,
       nDead: 0,
-      percentInfected: 0
+      percentInfected: 0,
+      percentDNA: 0,
+      refreshRate: 10000
     };
   },
 
@@ -145,7 +149,7 @@ export default {
     this.fetchGlobalStatistics();
 
     // Refresh every 10 seconds
-    setInterval(() => this.fetchGlobalStatistics(), 10000);
+    setInterval(() => this.fetchGlobalStatistics(), this.refreshRate);
   },
 
   methods: {
@@ -157,6 +161,9 @@ export default {
           this.nInfected = parsed.cases - (parsed.recovered + parsed.deaths);
           this.nDead = parsed.deaths;
           this.percentInfected = 100 * (this.nInfected / 7771535787);
+          this.percentDNA =
+            Math.round(Math.log10(this.nInfected)) +
+            Math.round(Math.log10(this.nDead));
 
           // Dijimos a la cliente que ganamos las statisticas
           this.loading = false;
@@ -164,6 +171,7 @@ export default {
         .catch(err => {
           // Encontramos un excepcion
           this.loading = false;
+
           console.log(err);
         });
     }
