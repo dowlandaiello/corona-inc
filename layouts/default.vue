@@ -39,25 +39,31 @@
 
     <nav class="navbar is-fixed-bottom is-spaced columns">
       <div class="column is-one-quarter">
-        <b-progress
-          v-bind:style="{ borderRadius: '6px;' }"
-          :value="20"
-          size="is-large"
-          >DNA</b-progress
-        >
+        <div class="control has-icons-left">
+          <span class="icon is-left level-item">
+            <b-icon icon="dna" size="is-small" />
+            <p v-bind:style="{ marginLeft: '3rem' }">DNA</p>
+          </span>
+          <b-progress
+            :value="40"
+            size="is-large"
+            type="is-primary"
+            class="is-stat is-large is-marginless is-hidden-mobile"
+          />
+        </div>
         <b-button
-          v-bind:style="{ color: '#9e1a39;', fontWeight: '600;' }"
+          v-bind:style="{ color: '#9e1a39', fontWeight: '600' }"
           size="is-large"
           expanded
           >Disease</b-button
         >
       </div>
-      <div class="column is-half" v-bind:style="{ marginTop: 'auto;' }">
+      <div class="column is-half" v-bind:style="{ marginTop: 'auto' }">
         <div class="columns is-gapless is-centered stat-section">
           <div class="column is-two-sixths">
             <b-icon icon="biohazard" size="is-small" />
             Infected
-            <p v-bind:style="{ color: '#b30033;' }">{{ nInfected }}</p>
+            <p v-bind:style="{ color: '#b30033' }">{{ nInfected }}</p>
           </div>
           <div class="column is-two-sixths is-vcentered primary-stat-section">
             <b-button size="is-large" class="primary-stat-section" expanded>
@@ -65,21 +71,39 @@
               <b-progress
                 :value="20"
                 size="is-small"
-                type="is-danger"
-                v-bind:style="{ height: '0.25rem;' }"
+                type="is-primary"
+                v-bind:style="{ height: '0.25rem' }"
+                class="is-stat is-small"
               />
             </b-button>
           </div>
           <div class="column is-two-sixths">
             <b-icon icon="skull" size="is-small" />
             Dead
-            <p v-bind:style="{ color: '#b30033;' }">{{ nDead }}</p>
+            <p v-bind:style="{ color: '#b30033' }">{{ nDead }}</p>
           </div>
         </div>
       </div>
       <div class="column is-one-quarter">
+        <div class="control has-icons-left has-icons-right">
+          <span class="icon is-left level-item">
+            <b-icon icon="flask" type="is-white" size="is-small" />
+            <p v-bind:style="{ marginLeft: '3rem', color: 'white' }">Cure</p>
+          </span>
+
+          <b-progress
+            :value="40"
+            size="is-large"
+            type="is-info"
+            class="is-stat is-large is-marginless is-hidden-mobile"
+          />
+
+          <span class="icon is-right">
+            <p v-bind:style="{ color: 'black' }">7%</p>
+          </span>
+        </div>
         <b-button
-          v-bind:style="{ color: '#50c1d4;', fontWeight: '600;' }"
+          v-bind:style="{ color: '#50c1d4', fontWeight: '600' }"
           size="is-large"
           expanded
           >World</b-button
