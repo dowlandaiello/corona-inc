@@ -2,7 +2,7 @@
   <div>
     <div class="control has-icons-left has-icons-right">
       <span class="icon is-left level-item">
-        <b-icon :icon="statBarIcon" size="is-small" />
+        <b-icon :icon="statBarIcon" type="is-white" size="is-small" />
         <p class="stat-bar-icon-label">{{ statBarDescription }}</p>
       </span>
       <b-progress
@@ -16,13 +16,15 @@
         <p :style="{ color: 'white' }">{{ statBarValue }}</p>
       </span>
     </div>
-    <b-button
-      class="stat-button"
-      :style="statButtonStyle"
-      size="is-large"
-      expanded
-      >{{ title }}</b-button
-    >
+    <nuxt-link :to="to"
+      ><b-button
+        class="stat-button"
+        :style="statButtonStyle"
+        size="is-large"
+        expanded
+        >{{ title }}</b-button
+      >
+    </nuxt-link>
   </div>
 </template>
 
@@ -49,6 +51,7 @@ export default {
     'statBarIcon',
     'statBarValue',
     'maxStatBarValue',
+    'to',
     'type'
   ],
   computed: {

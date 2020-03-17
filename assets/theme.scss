@@ -1,9 +1,9 @@
 $primary: #9d1839;
 $info: #00b4d7;
 
-@import "~bulma/sass/utilities/_all";
-@import "~bulma";
-@import "~buefy/src/scss/buefy";
+@import '~bulma/sass/utilities/_all';
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
 
 .is-stat.is-large * {
   height: calc(1.5 * #{$size-large}) !important;
@@ -16,4 +16,16 @@ $info: #00b4d7;
 
 .is-stat.is-small * {
   background-color: #018bb7;
+}
+
+.navbar {
+  @include tablet {
+    padding: 1rem;
+  }
+}
+
+.stat-section {
+  @include from($tablet) {
+    border-radius: 6px;
+  }
 }
