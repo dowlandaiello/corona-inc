@@ -17,6 +17,8 @@
     "@vue/cli-service": "~4.2.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier-vue": "^2.0.2",
     "eslint-plugin-vue": "^6.1.2",
     "vue-template-compiler": "^2.6.11"
   },
@@ -26,13 +28,21 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
+      "plugin:vue/recommended",
+      "plugin:prettier-vue/recommended",
+      "prettier/vue"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "prettier/prettier": [
+        "warn",
+        {
+          "singleQuote": true
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
