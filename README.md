@@ -9,8 +9,11 @@ Plague, Inc. mobile game.
 
 ## FAQs
 
-1. Why isn't the map loading correctly?
+1. "Why isn't the map loading correctly?"
+
    In order to use the google maps API in a production environment, you must [obtain an API key](https://developers.google.com/maps/documentation/javascript/get-api-key). Once you've done so, simply set `VUE_APP_GOOGLE_MAPS_API_KEY` in a `.env` file in this repository's root.
+
+   In development environments, you shouldn't need to use an API key, but the map will be rendered with a watermark.
 
 ### Development
 
