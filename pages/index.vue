@@ -11,7 +11,8 @@
           scaleControl: false,
           zoomControl: false,
           streetViewControl: false,
-          fullscreenControl: false
+          fullscreenControl: false,
+          maxZoom: maxZoom
         }"
       >
         <gmap-marker
@@ -31,12 +32,21 @@ export default {
     return {
       center: { lat: 20, lng: 0 },
       zoom: 3,
-      mapTypeId: 'hybrid',
       markers: [],
       countryData: {},
       lastInfectionsCount: 0,
       loading: true,
       geocoder: {}
+    }
+  },
+
+  computed: {
+    maxZoom() {
+      return this.$store.state.settings.maxZoom
+    },
+
+    mapTypeId() {
+      return this.$store.state.settings.mapType
     }
   },
 
@@ -52,11 +62,11 @@ export default {
       this.geocoder = new google.maps.Geocoder()
 
       // Get statistics for each country cited by the coronavirus API results
-      this.fetchLocalStatistics()
+      this.lazilyReloadLocalStatistics()
 
       // Refresh map data every n milliseconds
       setInterval(
-        () => this.fetchLocalStatistics(),
+        () => this.lazilyReloadLocalStatistics(),
         this.$store.state.settings.refreshRate
       )
     })
