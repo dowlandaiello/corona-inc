@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <nuxt />
     <nav class="navbar is-fixed-bottom is-spaced columns">
       <div class="column is-one-quarter">
@@ -78,6 +78,10 @@
   );
   color: #ffffff;
   text-align: center;
+}
+
+.root {
+  overflow-y: hidden;
 }
 </style>
 

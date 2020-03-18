@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="map-container">
     <gmap-map
       :center="center"
       :map-type-id="mapTypeId"
@@ -39,9 +39,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.map-container {
+  height: 100%;
+  overflow: hidden;
+}
+
 .vue-map-container {
   height: 105vh;
-  max-width: 100vw;
   width: 100%;
+  overflow-y: hidden;
 }
 </style>
