@@ -26,6 +26,12 @@ $info: #00b4d7;
   background-color: rgba(0, 0, 0, 0);
 }
 
+.navbar > .column {
+  @include mobile {
+    padding: 0;
+  }
+}
+
 .stat-section {
   @include from($tablet) {
     border-radius: 6px;

@@ -16,14 +16,15 @@
         <p :style="{ color: 'white' }">{{ statBarValue }}</p>
       </span>
     </div>
-    <nuxt-link :to="to"
-      ><b-button
+    <nuxt-link :to="to">
+      <b-button
         class="stat-button"
         :style="statButtonStyle"
         size="is-large"
         expanded
-        >{{ title }}</b-button
       >
+        {{ title }}
+      </b-button>
     </nuxt-link>
   </div>
 </template>
@@ -45,22 +46,43 @@ p {
 <script>
 export default {
   name: 'ClickableStatArea',
-  props: [
-    'title',
-    'statBarDescription',
-    'statBarIcon',
-    'statBarValue',
-    'maxStatBarValue',
-    'to',
-    'type'
-  ],
+  props: {
+    title: {
+      type: String,
+      default: 'Button'
+    },
+    statBarDescription: {
+      type: String,
+      default: 'Some statistic'
+    },
+    statBarIcon: {
+      type: String,
+      default: ''
+    },
+    statBarValue: {
+      type: Number,
+      default: 0
+    },
+    maxStatBarValue: {
+      type: Number,
+      default: 100
+    },
+    to: {
+      type: String,
+      default: 'index'
+    },
+    type: {
+      type: String,
+      default: 'info'
+    }
+  },
   computed: {
     statButtonStyle() {
       return `
           color: ${this.type === 'is-primary' ? '#9e1a39' : '#50c1d4'};
           font-weight: 600;
-      `;
+      `
     }
   }
-};
+}
 </script>

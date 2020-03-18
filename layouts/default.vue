@@ -5,10 +5,10 @@
       <div class="column is-one-quarter">
         <clickable-stat-area
           title="Disease"
-          statBarDescription="DNA"
-          statBarIcon="dna"
-          :statBarValue="percentDNA"
-          :maxStatBarValue="100"
+          stat-bar-description="DNA"
+          stat-bar-icon="dna"
+          :stat-bar-value="percentDNA"
+          :max-stat-bar-value="100"
           to="inspire"
           type="is-primary"
         />
@@ -35,19 +35,21 @@
           </div>
           <div class="column is-two-sixths">
             <b-icon icon="skull" size="is-small" />Dead
-            <p :style="{ color: '#b30033' }">{{ nDead.toLocaleString() }}</p>
+            <p :style="{ color: '#b30033' }">
+              {{ nDead.toLocaleString() }}
+            </p>
           </div>
         </div>
       </div>
       <div class="column is-one-quarter">
         <clickable-stat-area
           title="World"
-          statBarDescription="Cure"
-          statBarIcon="flask"
-          :statBarValue="
+          stat-bar-description="Cure"
+          stat-bar-icon="flask"
+          :stat-bar-value="
             Math.round((new Date('March 17, 2020 00:00:00') / new Date()) * 40)
           "
-          :maxStatBarValue="100"
+          :max-stat-bar-value="100"
           to="inspire"
           type="is-info"
         />
@@ -86,38 +88,30 @@
 </style>
 
 <script>
-import ClickableStatArea from '~/components/ClickableStatArea';
+import ClickableStatArea from '~/components/ClickableStatArea'
 
 export default {
+  components: {
+    ClickableStatArea
+  },
   data() {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' }
-        },
-        {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' }
-        }
-      ],
-      loading: true,
       nInfected: 0,
       nDead: 0,
       percentInfected: 0,
-      percentDNA: 0,
-      refreshRate: 10000
-    };
+      percentDNA: 0
+    }
   },
 
   created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
-    this.fetchGlobalStatistics();
+    this.fetchGlobalStatistics()
 
     // Refresh every 10 seconds
-    setInterval(() => this.fetchGlobalStatistics(), this.refreshRate);
+    setInterval(
+      () => this.fetchGlobalStatistics(),
+      this.$store.state.settings.refreshRate
+    )
   },
 
   methods: {
@@ -126,27 +120,20 @@ export default {
       fetch('https://coronavirus-19-api.herokuapp.com/all')
         .then(data => data.json())
         .then(parsed => {
-          this.nInfected = parsed.cases - (parsed.recovered + parsed.deaths);
-          this.nDead = parsed.deaths;
-          this.percentInfected = 100 * (this.nInfected / 7771535787);
+          this.nInfected = parsed.cases - (parsed.recovered + parsed.deaths)
+          this.nDead = parsed.deaths
+          this.percentInfected = 100 * (this.nInfected / 7771535787)
           this.percentDNA =
             Math.round(Math.log10(this.nInfected)) +
-            Math.round(Math.log10(this.nDead));
-
-          // Dijimos a la cliente que ganamos las statisticas
-          this.loading = false;
+            Math.round(Math.log10(this.nDead))
         })
         .catch(err => {
           // Encontramos un excepcion
-          this.loading = false;
+          this.loading = false
 
-          console.log(err);
-        });
+          console.error(err)
+        })
     }
-  },
-
-  components: {
-    ClickableStatArea
   }
-};
+}
 </script>

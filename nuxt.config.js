@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 export default {
   env: {
@@ -82,11 +82,11 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {
-      transpile: [/^vue2-google-maps($|\/)/];
+      ;[/^vue2-google-maps($|\/)/]
     }
   },
   server: {
     port: 3000,
     host: '0.0.0.0'
   }
-};
+}

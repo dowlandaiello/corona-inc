@@ -1,25 +1,27 @@
 <template>
-  <div class="map-container">
-    <gmap-map
-      :center="center"
-      :map-type-id="mapTypeId"
-      :zoom="5"
-      :options="{
-        mapTypeControl: false,
-        mapTypeId: 'hybrid',
-        scaleControl: false,
-        zoomControl: false,
-        streetViewControl: false,
-        fullscreenControl: false
-      }"
-    >
-      <gmap-marker
-        v-for="(item, index) in markers"
-        :key="index"
-        :position="item.position"
-        @click="center = item.position"
-      />
-    </gmap-map>
+  <div>
+    <b-loading :is-full-page="true" :active.sync="loading" />
+    <div class="map-container">
+      <gmap-map
+        :center="center"
+        :map-type-id="mapTypeId"
+        :zoom="zoom"
+        :options="{
+          mapTypeControl: false,
+          scaleControl: false,
+          zoomControl: false,
+          streetViewControl: false,
+          fullscreenControl: false
+        }"
+      >
+        <gmap-marker
+          v-for="(item, index) in markers"
+          :key="index"
+          :position="item.position"
+          @click="center = item.position"
+        />
+      </gmap-map>
+    </div>
   </div>
 </template>
 
@@ -27,15 +29,90 @@
 export default {
   data() {
     return {
-      center: { lat: -3.350235, lng: 111.995865 },
-      mapTypeId: 'terrain',
-      markers: [
-        { position: { lat: -0.48585, lng: 117.1466 } },
-        { position: { lat: -6.9127778, lng: 107.6205556 } }
-      ]
-    };
+      center: { lat: 20, lng: 0 },
+      zoom: 3,
+      mapTypeId: 'hybrid',
+      markers: [],
+      countryData: {},
+      lastInfectionsCount: 0,
+      loading: true,
+      geocoder: {}
+    }
+  },
+
+  created() {
+    // Wait for an instance of the google maps geocoding API to be available before we start looking for
+    // geocoder-specific data
+    this.$gmapApiPromiseLazy().then(() => {
+      // Make a new instance of the geocoder helper type that google maps provides us with.
+      // This will be used to determine the bounds of individual countries, and draw
+      // certain effects (e.g. chickenpox-looking infection density, etc...)
+      //
+      // eslint-disable-next-line no-undef
+      this.geocoder = new google.maps.Geocoder()
+
+      // Get statistics for each country cited by the coronavirus API results
+      this.fetchLocalStatistics()
+
+      // Refresh map data every n milliseconds
+      setInterval(
+        () => this.fetchLocalStatistics(),
+        this.$store.state.settings.refreshRate
+      )
+    })
+  },
+
+  methods: {
+    /**
+     * Does not force a full reload unless the infections count has changed since we last refreshed.
+     */
+    lazilyReloadLocalStatistics() {
+      fetch('https://coronavirus-19-api.herokuapp.com/all')
+        .then(data => data.json())
+        .then(parsed => {
+          // Cache a count of the infections, so that we can lazily reload data
+          if (
+            parsed.cases - (parsed.deaths + parsed.recovered) !==
+            this.lastInfectionsCount
+          ) {
+            this.lastInfectionsCount =
+              parsed.cases - (parsed.deaths + parsed.recovered)
+
+            // Perform a full refresh
+            this.fetchLocalStatistics()
+          }
+        })
+    },
+
+    /**
+     * Performs a full refresh of map data.
+     */
+    fetchLocalStatistics() {
+      fetch('https://coronavirus-19-api.herokuapp.com/countries')
+        .then(data => data.json())
+        .then(parsed => {
+          this.loading = false
+
+          for (const countryEntry of parsed) {
+            this.geocoder.geocode(
+              {
+                address: countryEntry.country
+              },
+              res => {
+                console.log(res)
+                console.log(countryEntry.country)
+              }
+            )
+          }
+        })
+        .catch(err => {
+          this.loading = false
+
+          console.error(err)
+        })
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
