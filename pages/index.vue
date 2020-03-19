@@ -97,22 +97,22 @@ export default {
     /**
      * Performs a full refresh of map data.
      */
-    fetchLocalStatistics() {
+    async fetchLocalStatistics() {
       fetch('https://coronavirus-19-api.herokuapp.com/countries')
         .then(data => data.json())
         .then(parsed => {
           this.loading = false
 
           for (const countryEntry of parsed) {
-            this.geocoder.geocode(
-              {
-                address: countryEntry.country
-              },
-              res => {
-                console.log(res)
-                console.log(countryEntry.country)
-              }
-            )
+            // If we don't know the bounds of this country yet, figure them out
+            if (this.countryData[countryEntry.country] === undefined) {
+              this.geocoder.geocode(
+                {
+                  address: countryEntry.country
+                },
+                res => console.log(res)
+              )
+            }
           }
         })
         .catch(err => {
