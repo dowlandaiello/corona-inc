@@ -114,7 +114,7 @@ export const getDataForDay = async d => {
         continue
       }
 
-      if (!results[countryName][key] && !regionName) {
+      if (!results[countryName][key] || results[countryName][key] == '') {
         results[countryName][key] = data[key]
       }
     }
@@ -163,7 +163,7 @@ export const getKey = (data, key, country, region) => {
  * @param {String} region the name of a province or region from which data should be found
  */
 export const getNumberConfirmed = (data, country, region) => {
-  return getKey(data, country, region, 'numConfirmed')
+  return getKey(data, 'numConfirmed', country, region)
 }
 
 /**
@@ -174,7 +174,7 @@ export const getNumberConfirmed = (data, country, region) => {
  * @param {String} region the name of a province or region from which data should be found
  */
 export const getNumberDead = (data, country, region) => {
-  return getKey(data, country, region, 'numDeaths')
+  return getKey(data, 'numDeaths', country, region)
 }
 
 /**
@@ -185,7 +185,7 @@ export const getNumberDead = (data, country, region) => {
  * @param {String} region the name of a province or region from which data should be found
  */
 export const getNumberRecovered = (data, country, region) => {
-  return getKey(data, country, region, 'numRecovered')
+  return getKey(data, 'numRecovered', country, region)
 }
 
 /**
@@ -196,7 +196,7 @@ export const getNumberRecovered = (data, country, region) => {
  * @param {String} region the name of a province or region from which data should be found
  */
 export const getNumberActive = (data, country, region) => {
-  return getKey(data, country, region, 'numActive')
+  return getKey(data, 'numActive', country, region)
 }
 
 /**
@@ -207,7 +207,7 @@ export const getNumberActive = (data, country, region) => {
  * @param {String} region the name of a province or region from which data should be found
  */
 export const getLongitude = (data, country, region) => {
-  return getKey(data, country, region, 'longitude')
+  return getKey(data, 'longitude', country, region)
 }
 
 /**
@@ -218,5 +218,5 @@ export const getLongitude = (data, country, region) => {
  * @param {*} region
  */
 export const getLatitude = (data, country, region) => {
-  return getKey(data, country, region, 'latitude')
+  return getKey(data, 'latitude', country, region)
 }

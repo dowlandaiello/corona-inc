@@ -30,14 +30,19 @@ describe('getDataForToday', () => {
 
 describe('getNumberConfirmed', () => {
   test('gets the number of confirmed cases globally', () => {
-    return getDataForToday()
-      .then(data => getNumberConfirmed(data))
-      .then(nInfections => expect(nInfections > 0))
+    return getDataForToday().then(data => expect(getNumberConfirmed(data) > 0))
   })
 
   test('gets the number of confirmed cases in the United States', () => {
-    return getDataForToday()
-      .then(data => getNumberConfirmed(data, 'United States'))
-      .then(nInfections => expect(nInfections > 0))
+    return getDataForToday().then(data =>
+      expect(getNumberConfirmed(data, 'US') > 0)
+    )
+  })
+
+  test('gets the number of confirmed cases in New York', () => {
+    return getDataForToday().then(data => {
+      console.log(data['US']['New York']['numConfirmed'])
+      expect(getNumberConfirmed(data, 'US', 'New York') > 0)
+    })
   })
 })
