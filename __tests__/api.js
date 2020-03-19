@@ -1,6 +1,11 @@
 /* eslint-disable no-undef */
 import 'babel-polyfill'
-import { formatDate, getDataForDay, getDataForToday } from '../jhuapi/api'
+import {
+  formatDate,
+  getDataForDay,
+  getDataForToday,
+  getNumberOfInfections
+} from '../jhuapi/api'
 
 describe('formatDate', () => {
   test('formats a date properly', () => {
@@ -19,5 +24,11 @@ describe('getDataForDay', () => {
 describe('getDataForToday', () => {
   test('gets data for today', () => {
     return getDataForToday().then(data => expect(data))
+  })
+})
+
+describe('getNumberOfInfections', () => {
+  test('gets the number of infections globally', () => {
+    return getDataForToday().then(data => getNumberOfInfections(data))
   })
 })
