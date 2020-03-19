@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const databaseRepo =
   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19'
 
@@ -7,7 +9,21 @@ export const databaseRepo =
  * @param {Date} d the date that should be formatted in accordance with the JHU format
  */
 export const formatDate = d => {
-  return `${d.getMonth()}-${d.getDay()}-${d.getYear()}`
+  const format = new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+
+  const [
+    { value: mo },
+    ,
+    { value: da },
+    ,
+    { value: ye }
+  ] = format.formatToParts(d)
+
+  return `${mo}-${da}-${ye}`
 }
 
 /**
@@ -15,19 +31,20 @@ export const formatDate = d => {
  *
  * @param {Date} d the date for which data should be requested
  */
-export const dataForDay = async d => {
+export const getDataForDay = async d => {
   // Get a link to the file store this particular day's information
   const rawFileURI = `${databaseRepo}/master/csse_covid_19_data/csse_covid_19_daily_reports/${formatDate(
     d
-  )}`
+  )}.csv`
 
-  return await fetch(rawFileURI)
+  // Perform the request
+  return (await axios.get(rawFileURI)).data
 }
 
 /**
  * Gets a copy of corona virus data for today in CSV format.
  */
-export const dataForToday = async () => {
+export const getDataForToday = async () => {
   // Get data for today
-  return await dataForDay(new Date())
+  return await getDataForDay(new Date())
 }

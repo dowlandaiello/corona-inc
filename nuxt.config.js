@@ -81,6 +81,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
+    // eslint-disable-next-line no-unused-vars
     extend(config, ctx) {
       ;[/^vue2-google-maps($|\/)/]
     }

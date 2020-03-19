@@ -16,6 +16,7 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@nuxtjs/axios": "^5.3.6",
+    "axios": "^0.19.2",
     "i": "^0.3.6",
     "npm": "^6.14.2",
     "nuxt": "^2.0.0",
@@ -43,6 +44,7 @@
     "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
+    "transform-runtime": "^0.0.0",
     "vue-jest": "^4.0.0-0"
   }
 }
