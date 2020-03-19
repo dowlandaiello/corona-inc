@@ -48,8 +48,24 @@ export const getDataForDay = async d => {
   // Make a hashmap of the results
   let results = {}
 
+  // The response from JHU
+  let resp = {}
+
+  try {
+    resp = (await axios.get(rawFileURI)).data
+  } catch (e) {
+    if (e.response && e.response.status === 404) {
+      // Use data from yesterday
+      d.setDate(d.getDate() - 1)
+
+      return getDataForDay(d)
+    } else {
+      throw e
+    }
+  }
+
   // Perform the request
-  await parse((await axios.get(rawFileURI)).data, row => {
+  await parse(resp, row => {
     // Get the name of the region
     const regionName = row.data[0] ? row.data[0].replace(`'`, '') : ''
 
@@ -74,15 +90,32 @@ export const getDataForDay = async d => {
     }
 
     if (results[countryName] === undefined) {
-      results[countryName] = data
-    } else {
-      // Add whatever values we have here, which might be on a local level, to any pre-existing (other province) data
-      for (const key in data) {
-        if (typeof data[key] === 'number') {
-          results[countryName][key] += data[key]
+      results[countryName] = {
+        numConfirmed: 0,
+        numDeaths: 0,
+        numRecovered: 0,
+        numActive: 0,
+        latitude: '',
+        longitude: ''
+      }
+    }
 
-          continue
+    // Add whatever values we have here, which might be on a local level, to any pre-existing (other province) data
+    for (const key in data) {
+      if (typeof data[key] === 'number') {
+        results[countryName][key] += data[key]
+
+        if (results[key]) {
+          results[key] += data[key]
+        } else {
+          results[key] = data[key]
         }
+
+        continue
+      }
+
+      if (!results[countryName][key] && !regionName) {
+        results[countryName][key] = data[key]
       }
     }
 
@@ -107,10 +140,14 @@ export const getDataForToday = async () => {
  *
  * @param {Object} data data returned by the getDataForDay method
  * @param {String} key the key for which data should be found
- * @param {String} country the country for which data should be found
+ * @param {String} country the country for which data should be found (optional)
  * @param {String} region the province or region for which data should be found (optional)
  */
 export const getKey = (data, key, country, region) => {
+  if (!country) {
+    return data[key]
+  }
+
   if (region) {
     return data[country][region][key]
   }

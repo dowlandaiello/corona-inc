@@ -4,7 +4,8 @@ import {
   formatDate,
   getDataForDay,
   getDataForToday,
-  getNumberOfInfections
+  getNumberActive,
+  getNumberConfirmed
 } from '../jhuapi/api'
 
 describe('formatDate', () => {
@@ -27,8 +28,16 @@ describe('getDataForToday', () => {
   })
 })
 
-describe('getNumberOfInfections', () => {
-  test('gets the number of infections globally', () => {
-    return getDataForToday().then(data => getNumberOfInfections(data))
+describe('getNumberConfirmed', () => {
+  test('gets the number of confirmed cases globally', () => {
+    return getDataForToday()
+      .then(data => getNumberConfirmed(data))
+      .then(nInfections => expect(nInfections > 0))
+  })
+
+  test('gets the number of confirmed cases in the United States', () => {
+    return getDataForToday()
+      .then(data => getNumberConfirmed(data, 'United States'))
+      .then(nInfections => expect(nInfections > 0))
   })
 })
