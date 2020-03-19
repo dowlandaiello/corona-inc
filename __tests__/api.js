@@ -5,7 +5,9 @@ import {
   getDataForDay,
   getDataForToday,
   getNumberActive,
-  getNumberConfirmed
+  getNumberConfirmed,
+  getNumberDead,
+  getNumberRecovered
 } from '../jhuapi/api'
 
 describe('formatDate', () => {
@@ -40,9 +42,62 @@ describe('getNumberConfirmed', () => {
   })
 
   test('gets the number of confirmed cases in New York', () => {
-    return getDataForToday().then(data => {
-      console.log(data['US']['New York']['numConfirmed'])
+    return getDataForToday().then(data =>
       expect(getNumberConfirmed(data, 'US', 'New York') > 0)
-    })
+    )
+  })
+})
+
+describe('getNumberDead', () => {
+  test('gets the number of deaths globally', () => {
+    return getDataForToday().then(data => expect(getNumberDead(data) > 0))
+  })
+
+  test('gets the number of deaths in the United States', () => {
+    return getDataForToday().then(data => expect(getNumberDead(data, 'US') > 0))
+  })
+
+  test('gets the number of deaths in New York', () => {
+    return getDataForToday().then(data =>
+      expect(getNumberDead(data, 'US', 'New York') > 0)
+    )
+  })
+})
+
+describe('getNumberRecovered', () => {
+  test('gets the number of recoveries globally', () => {
+    return getDataForDay(new Date('March 18, 2020')).then(data =>
+      expect(getNumberRecovered(data) > 0)
+    )
+  })
+
+  test('gets the number of recoveries in the United States', () => {
+    return getDataForDay(new Date('March 18, 2020')).then(data =>
+      expect(getNumberRecovered(data, 'US') === 0)
+    )
+  })
+
+  test('gets the number of recoveries in New York', () => {
+    return getDataForDay(new Date('March 18, 2020')).then(
+      data => expect(getNumberRecovered(data, 'US', 'New York')) === 0
+    )
+  })
+})
+
+describe('getNumberActive', () => {
+  test('gets the number of active cases globally', () => {
+    return getDataForToday().then(data => expect(getNumberActive(data) > 0))
+  })
+
+  test('gets the number of active cases in the United States', () => {
+    return getDataForToday().then(data =>
+      expect(getNumberActive(data, 'US') > 0)
+    )
+  })
+
+  test('gets the number of active cases in New York', () => {
+    return getDataForToday().then(data =>
+      expect(getNumberActive(data, 'US', 'New York') > 0)
+    )
   })
 })
