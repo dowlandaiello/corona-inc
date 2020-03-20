@@ -74,7 +74,7 @@ export const getDataForDay = async d => {
     // localities and countries.
     const countryName = row.data[1] ? row.data[1].replace(`'`, '') : ''
 
-    if (!regionName && !countryName) {
+    if ((!regionName && !countryName) || countryName === 'Country/Region') {
       return
     }
 

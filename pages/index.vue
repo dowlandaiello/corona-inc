@@ -1,6 +1,5 @@
 <template>
   <div>
-    <b-loading :is-full-page="true" :active.sync="loading" />
     <div class="map-container">
       <gmap-map
         :center="center"
@@ -35,7 +34,6 @@ export default {
       markers: [],
       countryData: {},
       lastInfectionsCount: 0,
-      loading: true,
       geocoder: {}
     }
   },
@@ -60,67 +58,7 @@ export default {
       //
       // eslint-disable-next-line no-undef
       this.geocoder = new google.maps.Geocoder()
-
-      // Get statistics for each country cited by the coronavirus API results
-      this.lazilyReloadLocalStatistics()
-
-      // Refresh map data every n milliseconds
-      setInterval(
-        () => this.lazilyReloadLocalStatistics(),
-        this.$store.state.settings.refreshRate
-      )
     })
-  },
-
-  methods: {
-    /**
-     * Does not force a full reload unless the infections count has changed since we last refreshed.
-     */
-    lazilyReloadLocalStatistics() {
-      fetch('https://coronavirus-19-api.herokuapp.com/all')
-        .then(data => data.json())
-        .then(parsed => {
-          // Cache a count of the infections, so that we can lazily reload data
-          if (
-            parsed.cases - (parsed.deaths + parsed.recovered) !==
-            this.lastInfectionsCount
-          ) {
-            this.lastInfectionsCount =
-              parsed.cases - (parsed.deaths + parsed.recovered)
-
-            // Perform a full refresh
-            this.fetchLocalStatistics()
-          }
-        })
-    },
-
-    /**
-     * Performs a full refresh of map data.
-     */
-    async fetchLocalStatistics() {
-      fetch('https://coronavirus-19-api.herokuapp.com/countries')
-        .then(data => data.json())
-        .then(parsed => {
-          this.loading = false
-
-          for (const countryEntry of parsed) {
-            // If we don't know the bounds of this country yet, figure them out
-            if (this.countryData[countryEntry.country] === undefined) {
-              this.geocoder.geocode(
-                {
-                  address: countryEntry.country
-                },
-                res => console.log(res)
-              )
-            }
-          }
-        })
-        .catch(err => {
-          this.loading = false
-
-          console.error(err)
-        })
-    }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 const defaultState = {
-  refreshRate: 1000,
+  refreshRate: 10000,
   maxZoom: 5,
   mapType: 'hybrid'
 }

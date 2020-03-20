@@ -16,6 +16,6 @@ export const mutations = {
    * @param {Object} data the JHU data dump that should be synchronized with the state
    */
   putParsedDump(state, data) {
-    state = data
+    Object.assign(state, data)
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="root">
+    <b-loading :is-full-page="true" :active.sync="loading" />
     <nuxt />
     <nav class="navbar is-fixed-bottom is-spaced columns">
       <div class="column is-one-quarter">
@@ -18,7 +19,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="biohazard" size="is-small" />Infected
             <p :style="{ color: '#b30033' }">
-              {{ nInfected.toLocaleString() }}
+              {{ nInfected }}
             </p>
           </div>
           <div class="column is-two-sixths is-vcentered primary-stat-section">
@@ -36,7 +37,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="skull" size="is-small" />Dead
             <p :style="{ color: '#b30033' }">
-              {{ nDead.toLocaleString() }}
+              {{ nDead }}
             </p>
           </div>
         </div>
@@ -89,7 +90,12 @@
 
 <script>
 import ClickableStatArea from '~/components/ClickableStatArea'
-import { getDataForToday } from '~/jhuapi/api'
+import {
+  getDataForToday,
+  getNumberConfirmed,
+  getNumberDead,
+  getNumberActive
+} from '~/jhuapi/api'
 
 const globalPopulation = 7771535787
 
@@ -97,20 +103,27 @@ export default {
   components: {
     ClickableStatArea
   },
+  data() {
+    return {
+      loading: true
+    }
+  },
   computed: {
     nInfected() {
-      return this.$store.state.jhuData.numActive
+      return getNumberActive(this.$store.state.jhuData)
     },
     nDead() {
-      return this.$store.state.jhuData.numDead
+      return getNumberDead(this.$store.state.jhuData)
     },
     percentInfected() {
-      return 100 * (this.$store.state.jhuData.numActive / globalPopulation)
+      return (
+        100 * (getNumberActive(this.$store.state.jhuData) / globalPopulation)
+      )
     },
     percentDNA() {
       return (
-        Math.round(Math.log10(this.$store.state.jhuData.numConfirmed)) +
-        Math.round(Math.log10(this.$store.state.jhuData.numDead))
+        Math.round(Math.log10(getNumberConfirmed(this.$store.state.jhuData))) +
+        Math.round(Math.log10(getNumberDead(this.$store.state.jhuData)))
       )
     }
   },
@@ -128,9 +141,11 @@ export default {
   methods: {
     fetchGlobalStatistics() {
       // Get data for today from JHU
-      const todayData = getDataForToday()
-
-      this.$store.state.jhuData.commit('')
+      getDataForToday().then(data => {
+        //console.log(data)
+        this.$store.commit('jhuData/putParsedDump', data)
+        this.loading = false
+      })
     }
   }
 }
