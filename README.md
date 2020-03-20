@@ -7,7 +7,7 @@
 This repository contains the source code for [itzcoronatime](https://itzcoronatime.com), an interactive map based off the
 Plague, Inc. mobile game.
 
-!(image)[.github/media/screenshot.png?raw=true "Screenshot"]
+![image](/.github/media/screenshot.png?raw=true)
 
 ## FAQs
 
