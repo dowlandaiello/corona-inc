@@ -14,30 +14,31 @@
           maxZoom: maxZoom
         }"
       >
-        <gmap-marker
-          v-for="(item, index) in markers"
+        <gmap-custom-marker
+          v-for="(item, index) in recentlyInfectedCountries"
           :key="index"
-          :position="item.position"
-          @click="center = item.position"
-        />
+          :marker="{ lat: item.latitude, lng: item.longitude }"
+        >
+        </gmap-custom-marker>
       </gmap-map>
     </div>
   </div>
 </template>
 
 <script>
+import GmapCustomMarker from 'vue2-gmap-custom-marker'
+
 export default {
+  components: {
+    'gmap-custom-marker': GmapCustomMarker
+  },
   data() {
     return {
       center: { lat: 20, lng: 0 },
       zoom: 3,
-      markers: [],
-      countryData: {},
-      lastInfectionsCount: 0,
       geocoder: {}
     }
   },
-
   computed: {
     maxZoom() {
       return this.$store.state.settings.maxZoom
@@ -46,14 +47,18 @@ export default {
       return this.$store.state.settings.mapType
     },
     recentlyInfectedCountries() {
-      return this.$store.state.jhuData.filter()
+      return Object.values(this.$store.state.jhuData.dump).filter(
+        infectionData =>
+          infectionData.numConfirmed > 0 &&
+          infectionData.numConfirmed <
+            this.$store.state.settings.minimumInfectionsToDismiss
+      )
     }
   },
-
   created() {
     // Wait for an instance of the google maps geocoding API to be available before we start looking for
     // geocoder-specific data
-    this.$gmapApiPromiseLazy().then(() => {
+    return this.$gmapApiPromiseLazy().then(() => {
       // Make a new instance of the geocoder helper type that google maps provides us with.
       // This will be used to determine the bounds of individual countries, and draw
       // certain effects (e.g. chickenpox-looking infection density, etc...)

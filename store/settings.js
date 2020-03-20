@@ -1,7 +1,10 @@
+import Vue from 'vue'
+
 const defaultState = {
   refreshRate: 10000,
   maxZoom: 5,
-  mapType: 'hybrid'
+  mapType: 'hybrid',
+  minimumInfectionsToDismiss: 50
 }
 
 /**
@@ -21,7 +24,7 @@ export const mutations = {
    * @param {String} value
    */
   set(state, key, value) {
-    state[key] = value
+    Vue.set(state, key, value)
   },
 
   /**
@@ -30,6 +33,8 @@ export const mutations = {
    * @param {state} state
    */
   restoreDefaults(state) {
-    Object.assign(state, defaultState)
+    for (const key in defaultState) {
+      Vue.set(state, key, defaultState[key])
+    }
   }
 }

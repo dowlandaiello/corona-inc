@@ -19,7 +19,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="biohazard" size="is-small" />Infected
             <p :style="{ color: '#b30033' }">
-              {{ nInfected ? nInfected.toLocaleString() : 0 }}
+              {{ nInfected.toLocaleString() }}
             </p>
           </div>
           <div class="column is-two-sixths is-vcentered primary-stat-section">
@@ -37,7 +37,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="skull" size="is-small" />Dead
             <p :style="{ color: '#b30033' }">
-              {{ nDead ? nDead.toLocaleString() : 0 }}
+              {{ nDead.toLocaleString() }}
             </p>
           </div>
         </div>
@@ -110,42 +110,43 @@ export default {
   },
   computed: {
     nInfected() {
-      return getNumberActive(this.$store.state.jhuData)
+      return getNumberActive(this.$store.state.jhuData.dump)
     },
     nDead() {
-      return getNumberDead(this.$store.state.jhuData)
+      return getNumberDead(this.$store.state.jhuData.dump)
     },
     percentInfected() {
       return (
-        100 * (getNumberActive(this.$store.state.jhuData) / globalPopulation)
+        100 *
+        (getNumberActive(this.$store.state.jhuData.dump) / globalPopulation)
       )
     },
     percentDNA() {
       return (
-        Math.round(Math.log10(getNumberConfirmed(this.$store.state.jhuData))) +
-        Math.round(Math.log10(getNumberDead(this.$store.state.jhuData)))
+        Math.round(
+          Math.log10(getNumberConfirmed(this.$store.state.jhuData.dump))
+        ) +
+        Math.round(Math.log10(getNumberDead(this.$store.state.jhuData.dump)))
       )
     }
   },
-  created() {
+  async created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
-    this.fetchGlobalStatistics().then(() =>
-      // Refresh every 10 seconds
-      setInterval(
-        () => this.fetchGlobalStatistics(),
-        this.$store.state.settings.refreshRate
-      )
+    await this.fetchGlobalStatistics()
+
+    // Refresh every 10 seconds
+    setInterval(
+      () => this.fetchGlobalStatistics(),
+      this.$store.state.settings.refreshRate
     )
   },
-
   methods: {
-    fetchGlobalStatistics() {
+    async fetchGlobalStatistics() {
       // Get data for today from JHU
-      return getDataForToday().then(data => {
-        //console.log(data)
-        this.$store.commit('jhuData/putParsedDump', data)
-        this.loading = false
-      })
+      const data = await getDataForToday()
+
+      this.loading = false
+      this.$store.commit('jhuData/putParsedDump', data)
     }
   }
 }

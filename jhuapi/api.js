@@ -86,7 +86,8 @@ export const getDataForDay = async d => {
       numActive:
         parseInt(row.data[3]) - (parseInt(row.data[4]) + parseInt(row.data[5])),
       latitude: row.data[6],
-      longitude: row.data[7]
+      longitude: row.data[7],
+      identifier: regionName ? regionName : countryName
     }
 
     if (results[countryName] === undefined) {
@@ -96,7 +97,8 @@ export const getDataForDay = async d => {
         numRecovered: 0,
         numActive: 0,
         latitude: '',
-        longitude: ''
+        longitude: '',
+        identifier: countryName
       }
     }
 
@@ -145,14 +147,14 @@ export const getDataForToday = async () => {
  */
 export const getKey = (data, key, country, region) => {
   if (!country) {
-    return data[key]
+    return data[key] || 0
   }
 
   if (region) {
-    return data[country][region][key]
+    return data[country][region][key] || 0
   }
 
-  return data[country][key]
+  return data[country][key] || 0
 }
 
 /**

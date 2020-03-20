@@ -1,4 +1,8 @@
-const defaultState = {}
+import Vue from 'vue'
+
+const defaultState = {
+  dump: {}
+}
 
 /**
  * Data collected from the Johns Hopkins University GitHub data dump via the jhu module.
@@ -16,6 +20,6 @@ export const mutations = {
    * @param {Object} data the JHU data dump that should be synchronized with the state
    */
   putParsedDump(state, data) {
-    Object.assign(state, data)
+    Vue.set(state, 'dump', data)
   }
 }
