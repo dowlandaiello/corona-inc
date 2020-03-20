@@ -19,7 +19,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="biohazard" size="is-small" />Infected
             <p :style="{ color: '#b30033' }">
-              {{ nInfected }}
+              {{ nInfected ? nInfected.toLocaleString() : 0 }}
             </p>
           </div>
           <div class="column is-two-sixths is-vcentered primary-stat-section">
@@ -37,7 +37,7 @@
           <div class="column is-two-sixths">
             <b-icon icon="skull" size="is-small" />Dead
             <p :style="{ color: '#b30033' }">
-              {{ nDead }}
+              {{ nDead ? nDead.toLocaleString() : 0 }}
             </p>
           </div>
         </div>
@@ -129,19 +129,19 @@ export default {
   },
   created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
-    this.fetchGlobalStatistics()
-
-    // Refresh every 10 seconds
-    setInterval(
-      () => this.fetchGlobalStatistics(),
-      this.$store.state.settings.refreshRate
+    this.fetchGlobalStatistics().then(() =>
+      // Refresh every 10 seconds
+      setInterval(
+        () => this.fetchGlobalStatistics(),
+        this.$store.state.settings.refreshRate
+      )
     )
   },
 
   methods: {
     fetchGlobalStatistics() {
       // Get data for today from JHU
-      getDataForToday().then(data => {
+      return getDataForToday().then(data => {
         //console.log(data)
         this.$store.commit('jhuData/putParsedDump', data)
         this.loading = false
