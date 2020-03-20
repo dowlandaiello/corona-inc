@@ -42,9 +42,11 @@ export default {
     maxZoom() {
       return this.$store.state.settings.maxZoom
     },
-
     mapTypeId() {
       return this.$store.state.settings.mapType
+    },
+    recentlyInfectedCountries() {
+      return this.$store.state.jhuData.filter()
     }
   },
 
