@@ -89,20 +89,31 @@
 
 <script>
 import ClickableStatArea from '~/components/ClickableStatArea'
+import { getDataForToday } from '~/jhuapi/api'
+
+const globalPopulation = 7771535787
 
 export default {
   components: {
     ClickableStatArea
   },
-  data() {
-    return {
-      nInfected: 0,
-      nDead: 0,
-      percentInfected: 0,
-      percentDNA: 0
+  computed: {
+    nInfected() {
+      return this.$store.state.jhuData.numActive
+    },
+    nDead() {
+      return this.$store.state.jhuData.numDead
+    },
+    percentInfected() {
+      return 100 * (this.$store.state.jhuData.numActive / globalPopulation)
+    },
+    percentDNA() {
+      return (
+        Math.round(Math.log10(this.$store.state.jhuData.numConfirmed)) +
+        Math.round(Math.log10(this.$store.state.jhuData.numDead))
+      )
     }
   },
-
   created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
     this.fetchGlobalStatistics()
@@ -116,23 +127,10 @@ export default {
 
   methods: {
     fetchGlobalStatistics() {
-      // Vamos a ganar la informacion del mundo
-      fetch('https://coronavirus-19-api.herokuapp.com/all')
-        .then(data => data.json())
-        .then(parsed => {
-          this.nInfected = parsed.cases - (parsed.recovered + parsed.deaths)
-          this.nDead = parsed.deaths
-          this.percentInfected = 100 * (this.nInfected / 7771535787)
-          this.percentDNA =
-            Math.round(Math.log10(this.nInfected)) +
-            Math.round(Math.log10(this.nDead))
-        })
-        .catch(err => {
-          // Encontramos un excepcion
-          this.loading = false
+      // Get data for today from JHU
+      const todayData = getDataForToday()
 
-          console.error(err)
-        })
+      this.$store.state.jhuData.commit('')
     }
   }
 }

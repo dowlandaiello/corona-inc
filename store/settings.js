@@ -16,7 +16,7 @@ export const mutations = {
   /**
    * Sets a key in the user preferences state object.
    *
-   * @param {state} state
+   * @param {Object} state
    * @param {String} key
    * @param {String} value
    */
