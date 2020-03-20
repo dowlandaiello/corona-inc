@@ -18,7 +18,9 @@
           v-for="(item, index) in recentlyInfectedCountries"
           :key="index"
           :marker="{ lat: item.latitude, lng: item.longitude }"
+          :alignment="item.latitude < 0 ? 'topright' : 'bottomright'"
         >
+          <img src="~assets/icons/biohazard_bubble.png" width="2%" />
         </gmap-custom-marker>
       </gmap-map>
     </div>

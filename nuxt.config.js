@@ -38,7 +38,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['@/plugins/google-maps'],
+  plugins: ['~plugins/google-maps.js'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -82,9 +82,7 @@ export default {
      ** You can extend webpack config here
      */
     // eslint-disable-next-line no-unused-vars
-    extend(config, ctx) {
-      ;[/^vue2-google-maps($|\/)/]
-    }
+    transpile: ['vue2-gmap-custom-marker', /^vue2-google-maps($|\/)/]
   },
   server: {
     port: 3000,
