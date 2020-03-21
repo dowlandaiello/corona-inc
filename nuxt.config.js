@@ -82,7 +82,11 @@ export default {
      ** You can extend webpack config here
      */
     // eslint-disable-next-line no-unused-vars
-    transpile: ['vue2-gmap-custom-marker', /^vue2-google-maps($|\/)/]
+    transpile: [
+      'vue2-gmap-custom-marker',
+      'disintegrate',
+      /^vue2-google-maps($|\/)/
+    ]
   },
   server: {
     port: 3000,

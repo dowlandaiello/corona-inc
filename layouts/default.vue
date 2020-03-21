@@ -145,8 +145,29 @@ export default {
       // Get data for today from JHU
       const data = await getDataForToday()
 
-      this.loading = false
       this.$store.commit('jhuData/putParsedDump', data)
+
+      // Register bubbles for all applicable countries
+      for (const place of Object.values(data)) {
+        if (
+          !this.$store.state.bubbles.deregisteredMarkers[place.identifier] &&
+          !this.$store.state.bubbles.countryIndicies[place.identifier] &&
+          place.numActive > 0 &&
+          place.numActive <
+            this.$store.state.settings.minimumInfectionsToDismiss
+        ) {
+          this.$store.commit('bubbles/addMarker', {
+            type: 'biohazard',
+            latitude: parseFloat(place.latitude),
+            longitude: parseFloat(place.longitude),
+            identifier: place.identifier
+          })
+        }
+      }
+
+      console.log(this.$store.state.bubbles.markers.length)
+
+      this.loading = false
     }
   }
 }

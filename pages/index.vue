@@ -15,12 +15,15 @@
         }"
       >
         <gmap-custom-marker
-          v-for="(item, index) in recentlyInfectedCountries"
+          v-for="(item, index) in markers"
           :key="index"
-          :marker="{ lat: item.latitude, lng: item.longitude }"
-          :alignment="item.latitude < 0 ? 'topright' : 'bottomright'"
+          :position="{ lat: item.latitude, lng: item.longitude }"
         >
-          <img src="~assets/icons/biohazard_bubble.png" width="2%" />
+          <img
+            src="~assets/icons/biohazard_bubble.png"
+            class="bubble"
+            @click="popBubble(index, $event)"
+          />
         </gmap-custom-marker>
       </gmap-map>
     </div>
@@ -29,6 +32,7 @@
 
 <script>
 import GmapCustomMarker from 'vue2-gmap-custom-marker'
+import anime from 'animejs/lib/anime.es.js'
 
 export default {
   components: {
@@ -38,7 +42,8 @@ export default {
     return {
       center: { lat: 20, lng: 0 },
       zoom: 3,
-      geocoder: {}
+      geocoder: {},
+      nBubblesPopped: 0
     }
   },
   computed: {
@@ -48,13 +53,8 @@ export default {
     mapTypeId() {
       return this.$store.state.settings.mapType
     },
-    recentlyInfectedCountries() {
-      return Object.values(this.$store.state.jhuData.dump).filter(
-        infectionData =>
-          infectionData.numConfirmed > 0 &&
-          infectionData.numConfirmed <
-            this.$store.state.settings.minimumInfectionsToDismiss
-      )
+    markers() {
+      return this.$store.state.bubbles.markers
     }
   },
   created() {
@@ -68,11 +68,23 @@ export default {
       // eslint-disable-next-line no-undef
       this.geocoder = new google.maps.Geocoder()
     })
+  },
+  methods: {
+    popBubble(markerIndex, event) {
+      anime({
+        targets: event.srcElement,
+        opacity: 0,
+        duration: 800,
+        completed: () => {
+          this.$store.commit('bubbles/popBubble', markerIndex)
+        }
+      })
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .map-container {
   height: 100%;
   overflow: hidden;
@@ -82,5 +94,10 @@ export default {
   height: 105vh;
   width: 100%;
   overflow-y: hidden;
+}
+
+.bubble {
+  cursor: pointer;
+  width: 2.5%;
 }
 </style>
