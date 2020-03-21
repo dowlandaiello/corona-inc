@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const defaultState = {
   markers: [],
   deregisteredMarkers: {},
@@ -20,8 +22,8 @@ export const mutations = {
    * @param {Object} bubble
    */
   addMarker(state, bubble) {
-    state.countryIndicies[bubble.identifier] = state.markers.length
     state.markers.push(bubble)
+    Vue.set(state.countryIndicies, bubble.identifier, state.markers.length)
   },
 
   /**
@@ -30,7 +32,7 @@ export const mutations = {
    * @param {Number} index
    */
   popBubble(state, index) {
-    state.deregisteredMarkers[state.markers[index].identifier] = true
     state.markers.splice(index, 1)
+    Vue.set(state.deregisteredMarkers, state.markers[index].identifier, true)
   }
 }

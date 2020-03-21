@@ -165,8 +165,6 @@ export default {
         }
       }
 
-      console.log(this.$store.state.bubbles.markers.length)
-
       this.loading = false
     }
   }

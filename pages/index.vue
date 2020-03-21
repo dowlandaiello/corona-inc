@@ -14,30 +14,27 @@
           maxZoom: maxZoom
         }"
       >
-        <gmap-custom-marker
+        <gmap-marker
           v-for="(item, index) in markers"
           :key="index"
-          :position="{ lat: item.latitude, lng: item.longitude }"
-        >
-          <img
-            src="~assets/icons/biohazard_bubble.png"
-            class="bubble"
-            @click="popBubble(index, $event)"
-          />
-        </gmap-custom-marker>
+          :ref="`markers${index}`"
+          :position="
+            google && new google.maps.LatLng(item.latitude, item.longitude)
+          "
+          :icon="markerOptions(item.type)"
+          :clickable="true"
+          @click="popBubble(index)"
+        />
       </gmap-map>
     </div>
   </div>
 </template>
 
 <script>
-import GmapCustomMarker from 'vue2-gmap-custom-marker'
 import anime from 'animejs/lib/anime.es.js'
+import { gmapApi } from 'vue2-google-maps'
 
 export default {
-  components: {
-    'gmap-custom-marker': GmapCustomMarker
-  },
   data() {
     return {
       center: { lat: 20, lng: 0 },
@@ -55,7 +52,8 @@ export default {
     },
     markers() {
       return this.$store.state.bubbles.markers
-    }
+    },
+    google: gmapApi
   },
   created() {
     // Wait for an instance of the google maps geocoding API to be available before we start looking for
@@ -70,15 +68,32 @@ export default {
     })
   },
   methods: {
-    popBubble(markerIndex, event) {
+    popBubble(markerIndex) {
       anime({
-        targets: event.srcElement,
+        targets: this.$refs[`markers${markerIndex}`],
         opacity: 0,
         duration: 800,
         completed: () => {
           this.$store.commit('bubbles/popBubble', markerIndex)
         }
       })
+    },
+    markerOptions(markerType) {
+      let iconURI = ''
+
+      switch (markerType) {
+        case 'biohazard':
+          iconURI = require('../assets/icons/biohazard_bubble.png')
+
+          break
+      }
+
+      return {
+        url: iconURI,
+        size: { width: 30, height: 30, f: 'px', b: 'px' },
+        scaledSize: { width: 30, height: 30, f: 'px', b: 'px' },
+        opacity: 1
+      }
     }
   }
 }
@@ -94,10 +109,5 @@ export default {
   height: 105vh;
   width: 100%;
   overflow-y: hidden;
-}
-
-.bubble {
-  cursor: pointer;
-  width: 2.5%;
 }
 </style>
