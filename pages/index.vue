@@ -11,11 +11,13 @@
           zoomControl: false,
           streetViewControl: false,
           fullscreenControl: false,
-          maxZoom: maxZoom
+          maxZoom: maxZoom,
+          minZoom: 2
         }"
       >
         <gmap-marker
           v-for="(item, index) in markers"
+          :id="`markers${index}`"
           :key="index"
           :ref="`markers${index}`"
           :position="
@@ -23,7 +25,7 @@
           "
           :icon="markerOptions(item.type)"
           :clickable="true"
-          @click="popBubble(index)"
+          @click="popBubble(index, $event)"
         />
       </gmap-map>
     </div>
@@ -71,12 +73,15 @@ export default {
     popBubble(markerIndex) {
       anime({
         targets: this.$refs[`markers${markerIndex}`],
+        easing: 'easeOutCirc',
         opacity: 0,
-        duration: 800,
-        completed: () => {
-          this.$store.commit('bubbles/popBubble', markerIndex)
-        }
+        duration: 200
       })
+
+      setTimeout(
+        () => this.$store.commit('bubbles/popBubble', markerIndex),
+        200
+      )
     },
     markerOptions(markerType) {
       let iconURI = ''
@@ -86,12 +91,16 @@ export default {
           iconURI = require('../assets/icons/biohazard_bubble.png')
 
           break
+        case 'dna':
+          iconURI = require('../assets/icons/dna_bubble.png')
+
+          break
       }
 
       return {
         url: iconURI,
-        size: { width: 30, height: 30, f: 'px', b: 'px' },
-        scaledSize: { width: 30, height: 30, f: 'px', b: 'px' },
+        size: { width: 40, height: 40, f: 'px', b: 'px' },
+        scaledSize: { width: 40, height: 40, f: 'px', b: 'px' },
         opacity: 1
       }
     }

@@ -22,8 +22,8 @@ export const mutations = {
    * @param {Object} bubble
    */
   addMarker(state, bubble) {
-    state.markers.push(bubble)
     Vue.set(state.countryIndicies, bubble.identifier, state.markers.length)
+    state.markers.push(bubble)
   },
 
   /**
@@ -32,7 +32,6 @@ export const mutations = {
    * @param {Number} index
    */
   popBubble(state, index) {
-    state.markers.splice(index, 1)
     Vue.set(state.deregisteredMarkers, state.markers[index].identifier, true)
   }
 }

@@ -16,9 +16,12 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/firebase": "^5.0.3",
     "animejs": "^3.1.0",
     "axios": "^0.19.2",
+    "firebase": "^7.12.0",
     "i": "^0.3.6",
+    "js-cookie": "^2.2.1",
     "npm": "^6.14.2",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
@@ -26,7 +29,8 @@
     "papaparse": "^5.1.1",
     "v-tooltip": "^2.0.3",
     "vue2-gmap-custom-marker": "^5.5.10",
-    "vue2-google-maps": "^0.10.7"
+    "vue2-google-maps": "^0.10.7",
+    "vuex-persistedstate": "^2.7.1"
   },
   "devDependencies": {
     "@nuxtjs/dotenv": "^1.4.1",

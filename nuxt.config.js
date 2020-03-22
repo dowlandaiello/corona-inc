@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 export default {
+  dev: process.env.NODE_ENV !== 'production',
   env: {
     VUE_APP_GOOGLE_MAPS_API_KEY: process.env.VUE_APP_GOOGLE_MAPS_API_KEY
   },
@@ -38,12 +39,16 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~plugins/google-maps.js'],
+  plugins: [
+    '~plugins/google-maps.js',
+    { src: '~plugins/state-persistence.js', ssr: false }
+  ],
+
   /*
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
+    // Doc: https://github.com/nuxt-community/eslint-odule
     '@nuxtjs/eslint-module'
   ],
   /*
@@ -67,7 +72,26 @@ export default {
     ],
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    [
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: 'AIzaSyBe1_41UgE4hFSe6iri1PQlzNdoQb1qXF8',
+          authDomain: 'corona-inc.firebaseapp.com',
+          databaseURL: 'https://corona-inc.firebaseio.com',
+          projectId: 'corona-inc',
+          storageBucket: 'corona-inc.appspot.com',
+          messagingSenderId: '599920780209',
+          appId: '1:599920780209:web:6b7f119d79722e71c91390',
+          measurementId: 'G-QBW6HJP18X'
+        },
+        services: {
+          analytics: true,
+          performance: true
+        }
+      }
+    ]
   ],
   /*
    ** Axios module configuration
