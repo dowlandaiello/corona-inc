@@ -31,6 +31,14 @@ describe('getDataForToday', () => {
 })
 
 describe('getNumberConfirmed', () => {
+  test('gets the number of confirmed cases globally yesterday', () => {
+    return getDataForToday({ includeHistoricalData: true }).then(data =>
+      expect(
+        getNumberConfirmed(data) > getNumberConfirmed(data, false, false, true)
+      )
+    )
+  })
+
   test('gets the number of confirmed cases globally', () => {
     return getDataForToday().then(data => expect(getNumberConfirmed(data) > 0))
   })
@@ -49,6 +57,12 @@ describe('getNumberConfirmed', () => {
 })
 
 describe('getNumberDead', () => {
+  test('gets the number of deaths globally yesterday', () => {
+    return getDataForToday({ includeHistoricalData: true }).then(data =>
+      expect(getNumberDead(data) > getNumberDead(data, false, false, true))
+    )
+  })
+
   test('gets the number of deaths globally', () => {
     return getDataForToday().then(data => expect(getNumberDead(data) > 0))
   })
@@ -65,6 +79,14 @@ describe('getNumberDead', () => {
 })
 
 describe('getNumberRecovered', () => {
+  test('gets the number of recoveries globally yesteray', () => {
+    return getDataForToday({ includeHistoricalData: true }).then(data =>
+      expect(
+        getNumberRecovered(data) > getNumberRecovered(data, false, false, true)
+      )
+    )
+  })
+
   test('gets the number of recoveries globally', () => {
     return getDataForDay(new Date('March 18, 2020')).then(data =>
       expect(getNumberRecovered(data) > 0)
@@ -85,6 +107,12 @@ describe('getNumberRecovered', () => {
 })
 
 describe('getNumberActive', () => {
+  test('gets the number of active cases globally yesteray', () => {
+    return getDataForToday({ includeHistoricalData: true }).then(data =>
+      expect(getNumberActive(data) > getNumberActive(data, false, false, true))
+    )
+  })
+
   test('gets the number of active cases globally', () => {
     return getDataForToday().then(data => expect(getNumberActive(data) > 0))
   })

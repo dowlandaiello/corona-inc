@@ -91,10 +91,11 @@
 <script>
 import ClickableStatArea from '~/components/ClickableStatArea'
 import {
-  getDataForToday,
+  getDataForDay,
   getNumberConfirmed,
   getNumberDead,
-  getNumberActive
+  getNumberActive,
+  closestDayWithData
 } from '~/jhuapi/api'
 
 const globalPopulation = 7771535787
@@ -142,8 +143,11 @@ export default {
   },
   methods: {
     async fetchGlobalStatistics() {
+      // Get the last day with data from JHU
+      const today = await closestDayWithData(new Date())
+
       // Get data for today from JHU
-      const data = await getDataForToday()
+      const data = await getDataForDay(today)
 
       this.$store.commit('jhuData/putParsedDump', data)
 
