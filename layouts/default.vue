@@ -111,23 +111,26 @@ export default {
   },
   computed: {
     nInfected() {
-      return getNumberActive(this.$store.state.jhuData.dump)
+      return getNumberActive(this.$store.state.jhuData.dump, false)
     },
     nDead() {
-      return getNumberDead(this.$store.state.jhuData.dump)
+      return getNumberDead(this.$store.state.jhuData.dump, false)
     },
     percentInfected() {
       return (
         100 *
-        (getNumberActive(this.$store.state.jhuData.dump) / globalPopulation)
+        (getNumberActive(this.$store.state.jhuData.dump, false) /
+          globalPopulation)
       )
     },
     percentDNA() {
       return (
         Math.round(
-          Math.log10(getNumberConfirmed(this.$store.state.jhuData.dump))
+          Math.log10(getNumberConfirmed(this.$store.state.jhuData.dump, false))
         ) +
-        Math.round(Math.log10(getNumberDead(this.$store.state.jhuData.dump)))
+        Math.round(
+          Math.log10(getNumberDead(this.$store.state.jhuData.dump, false))
+        )
       )
     }
   },
@@ -142,30 +145,66 @@ export default {
     )
   },
   methods: {
+    registerApplicableMarker(countryName, place) {
+      if (Object.values(place).length <= 1) {
+        return
+      }
+
+      if (
+        this.$store.state.bubbles.deregisteredMarkers[place.identifier] ||
+        this.$store.state.bubbles.countryIndicies[place.identifier]
+      ) {
+        return
+      }
+
+      if (
+        place.numConfirmed > 0 &&
+        place.numConfirmed <
+          this.$store.state.settings.minimumInfectionsToDismiss
+      ) {
+        this.$store.commit('bubbles/addMarker', {
+          type: 'biohazard',
+          latitude: parseFloat(place.latitude),
+          longitude: parseFloat(place.longitude),
+          identifier: place.identifier
+        })
+      }
+
+      if (
+        place.numActive /
+          getNumberActive(
+            this.$store.state.jhuData.dump,
+            countryName,
+            countryName !== place.identifier ? place.identifier : false,
+            true
+          ) >=
+        2
+      ) {
+        this.$store.commit('bubbles/addMarker', {
+          type: 'dna',
+          latitude: parseFloat(place.latitude),
+          longitude: parseFloat(place.longitude),
+          identifier: place.identifier
+        })
+      }
+    },
     async fetchGlobalStatistics() {
       // Get the last day with data from JHU
       const today = await closestDayWithData(new Date())
 
       // Get data for today from JHU
-      const data = await getDataForDay(today)
+      const data = await getDataForDay(today, { includeHistoricalData: true })
 
       this.$store.commit('jhuData/putParsedDump', data)
 
       // Register bubbles for all applicable countries
-      for (const place of Object.values(data)) {
-        if (
-          !this.$store.state.bubbles.deregisteredMarkers[place.identifier] &&
-          !this.$store.state.bubbles.countryIndicies[place.identifier] &&
-          place.numActive > 0 &&
-          place.numActive <
-            this.$store.state.settings.minimumInfectionsToDismiss
-        ) {
-          this.$store.commit('bubbles/addMarker', {
-            type: 'biohazard',
-            latitude: parseFloat(place.latitude),
-            longitude: parseFloat(place.longitude),
-            identifier: place.identifier
-          })
+      for (const place of Object.values(data.today)) {
+        this.registerApplicableMarker(place.identifier, place)
+
+        for (const province of Object.values(place).filter(
+          obj => typeof obj === 'object'
+        )) {
+          this.registerApplicableMarker(place.identifier, province)
         }
       }
 

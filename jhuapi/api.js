@@ -88,7 +88,8 @@ export const getDataForDay = async (d, opts) => {
     const yesterday = new Date()
     yesterday.setDate(d.getDate() - 1)
 
-    historical = getDataForDay(yesterday, { includeHistorical: false })
+    historical = (await getDataForDay(yesterday, { includeHistorical: false }))
+      .today
   }
 
   // The response from JHU
@@ -185,15 +186,20 @@ export const getDataForToday = async opts => {
  * @param {Boolean} historical whether the value should be fetched for today or yesterday
  */
 export const getKey = (data, key, country, region, historical) => {
+  const timeframe = historical ? 'yesterday' : 'today'
+  if (!data[timeframe]) {
+    return ''
+  }
+
   if (!country) {
-    return data[historical ? 'yesterday' : 'today'][key] || 0
+    return data[timeframe][key] || 0
   }
 
   if (region) {
-    return data[historical ? 'yesterday' : 'today'][country][region][key] || 0
+    return (data[timeframe][country][region] || {})[key] || 0
   }
 
-  return data[historical ? 'yesterday' : 'today'][country][key] || 0
+  return (data[timeframe][country] || {})[key] || 0
 }
 
 /**
