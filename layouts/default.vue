@@ -159,8 +159,12 @@ export default {
 
       if (
         place.numConfirmed > 0 &&
-        place.numConfirmed <
-          this.$store.state.settings.minimumInfectionsToDismiss
+        getNumberConfirmed(
+          this.$store.state.jhuData.dump,
+          countryName,
+          countryName !== place.identifier ? place.identifier : false,
+          true
+        ) === 0
       ) {
         this.$store.commit('bubbles/addMarker', {
           type: 'biohazard',
@@ -168,6 +172,8 @@ export default {
           longitude: parseFloat(place.longitude),
           identifier: place.identifier
         })
+
+        return
       }
 
       if (
@@ -178,7 +184,15 @@ export default {
             countryName !== place.identifier ? place.identifier : false,
             true
           ) >=
-        2
+          this.$store.state.settings.magnitudeIncreaseToDNABubble ||
+        place.numDead /
+          getNumberDead(
+            this.$store.state.jhuData.dump,
+            countryName,
+            countryName !== place.identifier ? place.identifier : false,
+            true
+          ) >=
+          this.$store.state.settings.magnitudeIncreaseToDNABubble
       ) {
         this.$store.commit('bubbles/addMarker', {
           type: 'dna',

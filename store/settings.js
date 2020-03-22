@@ -4,7 +4,7 @@ const defaultState = {
   refreshRate: 10000,
   maxZoom: 5,
   mapType: 'hybrid',
-  minimumInfectionsToDismiss: 5
+  magnitudeIncreaseToDNABubble: 1.75
 }
 
 /**
