@@ -141,7 +141,7 @@ export default {
     // Refresh every 10 seconds
     setInterval(
       () => this.fetchGlobalStatistics(),
-      this.$store.state.settings.refreshRate
+      this.$store.state.settings.persistent.refreshRate
     )
   },
   methods: {
@@ -184,7 +184,7 @@ export default {
             countryName !== place.identifier ? place.identifier : false,
             true
           ) >=
-          this.$store.state.settings.magnitudeIncreaseToDNABubble ||
+          this.$store.state.settings.session.magnitudeIncreaseToDNABubble ||
         place.numDead /
           getNumberDead(
             this.$store.state.jhuData.dump,
@@ -192,7 +192,7 @@ export default {
             countryName !== place.identifier ? place.identifier : false,
             true
           ) >=
-          this.$store.state.settings.magnitudeIncreaseToDNABubble
+          this.$store.state.settings.session.magnitudeIncreaseToDNABubble
       ) {
         this.$store.commit('bubbles/addMarker', {
           type: 'dna',

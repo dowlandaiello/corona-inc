@@ -47,10 +47,10 @@ export default {
   },
   computed: {
     maxZoom() {
-      return this.$store.state.settings.maxZoom
+      return this.$store.state.settings.session.maxZoom
     },
     mapTypeId() {
-      return this.$store.state.settings.mapType
+      return this.$store.state.settings.persistent.mapType
     },
     markers() {
       return this.$store.state.bubbles.markers

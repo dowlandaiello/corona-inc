@@ -1,10 +1,14 @@
 import Vue from 'vue'
 
 const defaultState = {
-  refreshRate: 10000,
-  maxZoom: 5,
-  mapType: 'hybrid',
-  magnitudeIncreaseToDNABubble: 1.75
+  persistent: {
+    refreshRate: 10000,
+    mapType: 'hybrid'
+  },
+  session: {
+    maxZoom: 5,
+    magnitudeIncreaseToDNABubble: 1.75
+  }
 }
 
 /**

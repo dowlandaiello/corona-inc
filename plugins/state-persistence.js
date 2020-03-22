@@ -4,7 +4,7 @@ export default ({ store }) => {
   window.onNuxtReady(() => {
     createPersistedState({
       key: 'coronainc',
-      paths: ['bubbles.deregisteredMarkers', 'settings']
+      paths: ['bubbles.deregisteredMarkers', 'settings.persistent']
     })(store)
   })
 }
