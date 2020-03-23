@@ -3,19 +3,24 @@ import sys
 import json
 
 
-def get_coordinate_pairs(l):
-    result = []
+def get_border_and_path(l):
+    border = {}
+    path = []
 
     for unformatted_coordinate_pair in l:
         coordinate_list = unformatted_coordinate_pair.split(",")
-        coordinate_map = {}
 
-        coordinate_map["lat"] = float(coordinate_list[1])
-        coordinate_map["lng"] = float(coordinate_list[0])
+        lat = float(coordinate_list[1])
+        lng = float(coordinate_list[0])
 
-        result.append(coordinate_map)
+        if round(lng) not in border:
+            border[round(lng, 2)] = [lat]
+        else:
+            border[round(lng, 2)].append(lat)
 
-    return result
+        path.append({"lat": lat, "lng": lng})
+
+    return {"border": border, "path": path}
 
 
 if __name__ != "__main__" or len(sys.argv) < 3:
@@ -29,11 +34,16 @@ with open(sys.argv[1]) as f, open(sys.argv[2], "w+") as out:
 
     for placegroup in doc["kml"]["Document"]["Folder"][1]["Folder"][1:]:
         for place in placegroup["Placemark"]:
-            border = place["MultiGeometry"]["Polygon"][-1] if "Polygon" not in place else place["Polygon"]
+            border = sorted(place["MultiGeometry"]["Polygon"], key=lambda border_poly: len(border_poly["outerBoundaryIs"]["LinearRing"]["coordinates"]))[
+                -1] if "Polygon" not in place else place["Polygon"]
+
+            border_path = get_border_and_path(
+                border["outerBoundaryIs"]["LinearRing"]["coordinates"].split(",0 "))
 
             parsed = {
                 "identifier": place["name"],
-                "border": get_coordinate_pairs(border["outerBoundaryIs"]["LinearRing"]["coordinates"].split(",0 "))
+                "border": border_path["border"],
+                "path": border_path["path"]
             }
 
             result[parsed["identifier"]] = parsed

@@ -137,12 +137,6 @@ export default {
   async created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
     await this.fetchGlobalStatistics()
-
-    // Refresh every 10 seconds
-    setInterval(
-      () => this.fetchGlobalStatistics(),
-      this.$store.state.settings.persistent.refreshRate
-    )
   },
   methods: {
     registerApplicableMarker(countryName, place) {

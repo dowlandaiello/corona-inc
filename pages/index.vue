@@ -37,6 +37,7 @@
 <script>
 import anime from 'animejs/lib/anime.es.js'
 import { gmapApi } from 'vue2-google-maps'
+//import { getNumActive } from '../jhuapi/api'
 
 export default {
   data() {
@@ -57,10 +58,29 @@ export default {
     markers() {
       return this.$store.state.bubbles.markers
     },
+    countryFills() {
+      const allPaths = require('../static/world-borders.json')
+
+      const targetCountry = 'India'
+      const borderMatrix = allPaths[targetCountry]['border']
+      let paths = []
+
+      console.log(borderMatrix)
+
+      // for (
+      //   let i = 0;
+      //   i < getNumActive(this.$state.jhuData.dump, 'India', false, false);
+      //   i++
+      // ) {}
+
+      return paths
+    },
     paths() {
       const allPaths = require('../static/world-borders.json')
 
-      return [allPaths['Afghanistan']['border']]
+      this.countryFills
+
+      return [allPaths['India']['path']]
     },
     google: gmapApi
   },
@@ -74,6 +94,8 @@ export default {
       //
       // eslint-disable-next-line no-undef
       this.geocoder = new google.maps.Geocoder()
+
+      //this.countryFills()
     })
   },
   methods: {
