@@ -2,6 +2,7 @@
   <div>
     <div class="map-container">
       <gmap-map
+        ref="map"
         :center="center"
         :map-type-id="mapTypeId"
         :zoom="zoom"
@@ -55,6 +56,11 @@ export default {
     markers() {
       return this.$store.state.bubbles.markers
     },
+    paths() {
+      const allPaths = require('../static/world-borders.json')
+
+      return allPaths['Afghanistan']['border']
+    }
     google: gmapApi
   },
   created() {
