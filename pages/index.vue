@@ -71,17 +71,17 @@ export default {
   },
   methods: {
     popBubble(markerIndex) {
+      setTimeout(
+        () => this.$store.commit('bubbles/popBubble', markerIndex),
+        200
+      )
+
       anime({
         targets: this.$refs[`markers${markerIndex}`],
         easing: 'easeOutCirc',
         opacity: 0,
         duration: 200
       })
-
-      setTimeout(
-        () => this.$store.commit('bubbles/popBubble', markerIndex),
-        200
-      )
     },
     markerOptions(markerType) {
       let iconURI = ''
