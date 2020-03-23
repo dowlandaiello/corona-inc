@@ -28,6 +28,7 @@
           :clickable="true"
           @click="popBubble(index, $event)"
         />
+        <gmap-polygon :paths="paths" :editable="false" />
       </gmap-map>
     </div>
   </div>
@@ -59,8 +60,8 @@ export default {
     paths() {
       const allPaths = require('../static/world-borders.json')
 
-      return allPaths['Afghanistan']['border']
-    }
+      return [allPaths['Afghanistan']['border']]
+    },
     google: gmapApi
   },
   created() {
