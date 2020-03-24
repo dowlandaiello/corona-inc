@@ -134,9 +134,9 @@ export default {
       )
     }
   },
-  async created() {
+  created() {
     // Ganamos la informacion que la cliente necesita--cuantos personas hay muriendo?
-    await this.fetchGlobalStatistics()
+    return this.fetchGlobalStatistics()
   },
   methods: {
     registerApplicableMarker(countryName, place) {
@@ -152,13 +152,14 @@ export default {
       }
 
       if (
-        place.numConfirmed > 0 &&
-        getNumberConfirmed(
-          this.$store.state.jhuData.dump,
-          countryName,
-          countryName !== place.identifier ? place.identifier : false,
-          true
-        ) === 0
+        (place.numConfirmed > 0 &&
+          getNumberConfirmed(
+            this.$store.state.jhuData.dump,
+            countryName,
+            countryName !== place.identifier ? place.identifier : false,
+            true
+          ) === 0) ||
+        place.numConfirmed === 1
       ) {
         this.$store.commit('bubbles/addMarker', {
           type: 'biohazard',

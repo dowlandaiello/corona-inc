@@ -13,10 +13,10 @@ def get_border_and_path(l):
         lat = float(coordinate_list[1])
         lng = float(coordinate_list[0])
 
-        if round(lng) not in border:
-            border[round(lng, 2)] = [lat]
+        if round(lng, 1) not in border:
+            border[round(lng, 1)] = [lat]
         else:
-            border[round(lng, 2)].append(lat)
+            border[round(lng, 1)].append(lat)
 
         path.append({"lat": lat, "lng": lng})
 

@@ -98,12 +98,12 @@ export const getDataForDay = async (d, opts) => {
   // Perform the request
   await parse(resp, row => {
     // Get the name of the region
-    const regionName = row.data[0] ? row.data[0].replace(`'`, '') : ''
+    const regionName = row.data[3] ? row.data[3].replace(`'`, '') : ''
 
     // Get the name of the country associated with this row.
     // This is necessary, as we want to record both information regarding
     // localities and countries.
-    const countryName = row.data[1] ? row.data[1].replace(`'`, '') : ''
+    const countryName = row.data[4] ? row.data[4].replace(`'`, '') : ''
 
     if ((!regionName && !countryName) || countryName === 'Country/Region') {
       return
@@ -111,13 +111,13 @@ export const getDataForDay = async (d, opts) => {
 
     // Get the number of cases, deaths, recoveries, and active cases in this region
     const data = {
-      numConfirmed: parseInt(row.data[3]),
-      numDeaths: parseInt(row.data[4]),
-      numRecovered: parseInt(row.data[5]),
+      numConfirmed: parseInt(row.data[7]),
+      numDeaths: parseInt(row.data[8]),
+      numRecovered: parseInt(row.data[9]),
       numActive:
         parseInt(row.data[3]) - (parseInt(row.data[4]) + parseInt(row.data[5])),
-      latitude: row.data[6],
-      longitude: row.data[7],
+      latitude: row.data[5],
+      longitude: row.data[6],
       identifier: regionName ? regionName : countryName
     }
 
@@ -196,7 +196,7 @@ export const getKey = (data, key, country, region, historical) => {
   }
 
   if (region) {
-    return (data[timeframe][country][region] || {})[key] || 0
+    return ((data[timeframe][country] || {})[region] || {})[key] || 0
   }
 
   return (data[timeframe][country] || {})[key] || 0

@@ -28,7 +28,7 @@
           :clickable="true"
           @click="popBubble(index, $event)"
         />
-        <gmap-polygon :paths="paths" :editable="false" />
+        <gmap-polygon :paths="paths" />
       </gmap-map>
     </div>
   </div>
@@ -63,6 +63,7 @@ export default {
 
       const targetCountry = 'India'
       const borderMatrix = allPaths[targetCountry]['border']
+
       let paths = []
 
       console.log(borderMatrix)

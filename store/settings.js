@@ -7,7 +7,7 @@ const defaultState = {
   },
   session: {
     maxZoom: 5,
-    magnitudeIncreaseToDNABubble: 1.75
+    magnitudeIncreaseToDNABubble: 1.5
   }
 }
 
