@@ -49,7 +49,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "has-flag": "^4.0.0",
     "jest": "^24.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "transform-runtime": "^0.0.0",
